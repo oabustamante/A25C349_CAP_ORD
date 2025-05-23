@@ -1,0 +1,19 @@
+{
+  "name": "ZCB9980010932",
+  "version": "1.0.0",
+  "description": "CAP Sales Orders",
+  "repository": "https://github.com/oabustamante/A25C349_CAP_ORD.git",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^8.9.4",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@cap-js/cds-types": "^0.10.0",
+    "@cap-js/sqlite": "^1.11.0"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  }
+}
