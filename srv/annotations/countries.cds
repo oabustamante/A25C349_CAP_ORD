@@ -1,10 +1,8 @@
 using {SalesOrders as service} from '../service';
 
 annotate service.Countries with {
-    @title: 'Countries'
-    ID
-    @Common: {
-        Text : code,
+    ID @title: 'Countries' @Common: {
+        Text : text,    //code, // Lo que quiero que se muestre
         TextArrangement : #TextOnly,
     };
 

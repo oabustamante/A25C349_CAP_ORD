@@ -4,17 +4,17 @@ using from './items';
 annotate service.Orders with @odata.draft.enabled;
 
 annotate service.Orders with {
-    ID            @title: 'UUID';
-    orderID       @title: 'Order ID';   // @Common.FieldControl: #ReadOnly;
-    email         @title: 'Email';
+    ID            @title            : 'UUID'      @Common.FieldControl: #ReadOnly;
+    orderID       @title            : 'Order ID'  @Common.FieldControl: #ReadOnly;
+    email         @title            : 'Email'     @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
     firstName     @title: 'First Name';
     lastName      @title: 'Last Name';
     country       @title: 'Country';
     createdOn     @title: 'Created On';
     deliveryDate  @title: 'Delivery Date';
     status        @title: 'Status';
-    totalPrice    @title            : 'Total'  @Common.FieldControl: #ReadOnly  @Measures.ISOCurrency: currencyCode;
-    currencyCode  @Common.IsCurrency: true     @Common.FieldControl: #ReadOnly;
+    totalPrice    @title            : 'Total'     @Common.FieldControl: #ReadOnly  @Measures.ISOCurrency: currencyCode;
+    currencyCode  @Common.IsCurrency: true        @Common.FieldControl: #ReadOnly;
     imageUrl      @title: 'Imágen';
 }
 
@@ -36,20 +36,20 @@ annotate service.Orders with {
                 ValueListProperty: 'ID'
             }]
         },
-        // ValueList      : {
-        //     $Type         : 'Common.ValueListType',
-        //     CollectionPath: 'Countries',
-        //     Parameters    : [{
-        //         $Type            : 'Common.ValueListParameterInOut',
-        //         LocalDataProperty: country.code,
-        //         ValueListProperty: 'code'
-        //     }]
-        // },
+    // ValueList      : {
+    //     $Type         : 'Common.ValueListType',
+    //     CollectionPath: 'Countries',
+    //     Parameters    : [{
+    //         $Type            : 'Common.ValueListParameterInOut',
+    //         LocalDataProperty: country.code,
+    //         ValueListProperty: 'code'
+    //     }]
+    // },
     };
 };
 
 annotate service.Orders with @(
-    UI.HeaderInfo         : {
+    UI.HeaderInfo           : {
         $Type         : 'UI.HeaderInfoType',
         TypeName      : 'Sales Order',
         TypeNamePlural: 'Sales Orders',
@@ -62,14 +62,14 @@ annotate service.Orders with @(
     //     Value: email
     // }
     },
-    UI.SelectionFields    : [
+    UI.SelectionFields      : [
         orderID,
         email,
         createdOn,
         deliveryDate,
         status_code
     ],
-    UI.LineItem           : [
+    UI.LineItem             : [
         {
             $Type: 'UI.DataField',
             Value: ID,
@@ -108,7 +108,20 @@ annotate service.Orders with @(
             Value: currencyCode,
         },
     ],
-    UI.FieldGroup #HeaderA: {
+    UI.FieldGroup #HeaderKey: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: ID
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: orderID
+            }
+        ]
+    },
+    UI.FieldGroup #HeaderA  : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
@@ -125,7 +138,7 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderB: {
+    UI.FieldGroup #HeaderB  : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
@@ -142,12 +155,21 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderC: {
+    UI.FieldGroup #HeaderC  : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
-                $Type: 'UI.DataField',
-                Value: status_code
+                $Type                  : 'UI.DataField',
+                Value                  : status_code,
+                //Criticality : status
+                ![@Common.FieldControl]: {$edmJson: {$If: [
+                    {$Eq: [
+                        {$Path: 'IsActiveEntity'},
+                        false
+                    ]},
+                    3,
+                    1
+                ]}}
             },
             {
                 $Type: 'UI.DataField',
@@ -166,7 +188,12 @@ annotate service.Orders with @(
     //         Value: imageUrl
     //     }]
     // },
-    UI.HeaderFacets       : [
+    UI.HeaderFacets         : [
+        {
+            $Type : 'UI.ReferenceFacet',
+            Target: '@UI.FieldGroup#HeaderKey',
+            ID    : 'HeaderKey'
+        },
         {
             $Type : 'UI.ReferenceFacet',
             Target: '@UI.FieldGroup#HeaderA',
@@ -188,9 +215,10 @@ annotate service.Orders with @(
     //     ID    : 'HeaderD'
     // }
     ],
-    UI.Facets             : [{
+    UI.Facets               : [{
         $Type : 'UI.ReferenceFacet',
         Target: 'Items/@UI.LineItem',
-        Label : 'Order Items'
+        Label : 'Order Items',
+        ID    : 'Items'
     }]
 );

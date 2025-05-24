@@ -4,64 +4,54 @@ const { init } = require("@sap/cds/lib/ql/cds.ql-Query");
 
 module.exports = class ManageSalesOrders extends cds.ApplicationService {
     //
-    init () {
+    async init () {
         // ->
         const {Orders, Items} = this.entities;
         //
-        // this.before("NEW", Orders.drafts, async (req) => {
-        //     console.log("== BEFORE ==", req.data);
-        //     //
-        //     console.log("== Order.Status ==", req.data.Status);
-        //     console.log("== Order.status_code ==", req.data.status_code);
+        this.before('NEW', Orders.drafts, async (req) => {
+            //let today = new Date(Date.now());
+            let today = new Date();
 
-        //     req.data ??= {
-        //         orderID : 1,
-        //         status_code: 'neww',
-        //         currencyCode: 'MXN'
-        //     }
 
-        //     if (req.data === null || req.data === 'undefined') {
-        //         req.data.firstName = 'Juan';
-        //         req.data.currencyCode = 'MXN';
-        //         req.data.country_ID = 'MX';
-        //     }
-        //     console.log("== Order.Status ==", req.data.Status);
-        //     console.log("== Order.status_code ==", req.data.status_code);
-        //     console.log("== Order.currencyCode ==", req.data.currencyCode);
-        //     console.log("== BEFORE ==", req.data);
-        // });
+            req.data.country_ID = 'MX';
+            req.data.createdOn = today.toISOString().split('T')[0];
+            req.data.status_code = 'neww';
+            req.data.totalPrice = 0;
+            req.data.currencyCode = 'MXN';
+        });
 
         this.before('NEW', Items.drafts, async (req) => {
             let result = await SELECT.one.from(Items).columns('max(itemPos) as maxPos');
             let result_d = await SELECT.one.from(Items.drafts).columns('max(itemPos) as maxPos').where({parentUUID_ID: req.data.parentUUID_ID});
-            
-            let maxPos = parseInt(result.maxPos);
-            let maxPos_d = parseInt(result_d.maxPos);
+            let maxPos = 0, maxPos_d = 0, itemPos = 0;
 
-            let maxPosition = 0;
+            result.maxPos ??= 0;
+            result_d.maxPos ??= 0;
 
-            if(isNaN(maxPos_d)) {
-                maxPosition = maxPos + 1;
-            } else if (maxPos < maxPos_d) {
-                maxPosition = maxPos_d + 1;
+            maxPos = parseInt(result.maxPos);
+            maxPos_d = parseInt(result_d.maxPos);
+
+            if (maxPos < maxPos_d) {
+                itemPos = maxPos_d + 1;
             } else {
-                maxPosition = maxPos + 1;
+                itemPos = maxPos + 1;
             }
 
-            //console.log("data", req.data);
-            
-            // if (result.maxPos === 'undefined' || result.maxPos === 0) {
-            //     result.maxPos = 1;
-            // } else {
-            //     result.maxPos += 1;
-            // }
-            //req.data.itemPos = result.maxPos;
-            //console.log("result", result);
-            req.data.itemPos = maxPosition;
+            req.data.itemPos = itemPos;
+        });
+
+        this.before('CREATE', Orders, async (req) => {
+            let result = await SELECT.one.from(Orders).columns('max(orderID) as maxOrderID');
+            //let result_d = await SELECT.one.from()
+
+            result.maxOrderID ??= 0;
+            let maxOrdID = parseInt(result.maxOrderID) + 1;
+            console.log("maxOrdID", maxOrdID);
+            req.data.orderID = maxOrdID;
         });
 
         // <-
-        return super.init();
+        return await super.init();
     }
 }
 

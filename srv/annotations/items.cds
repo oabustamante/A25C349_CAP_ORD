@@ -1,42 +1,42 @@
 using {SalesOrders as service} from '../service';
 
 annotate service.Items with {
-    itemPos          @title: 'Position';
+    itemPos          @title: 'Position' @Common.FieldControl: #ReadOnly;
     name             @title: 'Name';
     description      @title: 'Description';
     releaseDate      @title: 'Released Date';
     discontinuedDate @title: 'Discontinued Date';
     price            @title: 'Price';
     currencyCode     @title: 'Currency';
-height           @title: 'Height';  //  @Measures.Unit: unitOfMeasure;
-    width            @title: 'Width';   // @Measures.Unit: unitOfMeasure;
-    depth            @title: 'Depth';    // @Measures.Unit: unitOfMeasure;
+    height           @title: 'Height'; //  @Measures.Unit: unitOfMeasure;
+    width            @title: 'Width'; // @Measures.Unit: unitOfMeasure;
+    depth            @title: 'Depth'; // @Measures.Unit: unitOfMeasure;
     quantity         @title: 'Quantity';
-    unitOfMeasure    @title: 'Base unit' @Common.IsUnit;    //@Common.FieldControl : #ReadOnly;
+    unitOfMeasure    @title: 'Base unit'  @Common.IsUnit; //@Common.FieldControl : #ReadOnly;
 };
 
 annotate service.Items with {
-    currencyCode @Common:{
-        Text : currencyCode.code,
+    currencyCode  @Common: {
+        Text           : currencyCode.code,
         TextArrangement: #TextOnly,
-        ValueList : {
-            $Type : 'Common.ValueListType',
-            CollectionPath : 'Currencies',
-            Parameters:[{
-                $Type:'Common.ValueListParameterInOut',
+        ValueList      : {
+            $Type         : 'Common.ValueListType',
+            CollectionPath: 'Currencies',
+            Parameters    : [{
+                $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: currencyCode_ID,
                 ValueListProperty: 'ID'
             }]
         },
     };
     unitOfMeasure @Common: {
-        Text : unitOfMeasure.code,
+        Text           : unitOfMeasure.code,
         TextArrangement: #TextOnly,
-        ValueList : {
-            $Type : 'Common.ValueListType',
-            CollectionPath : 'UnitOfMeasures',
-            Parameters:[{
-                $Type:'Common.ValueListParameterInOut',
+        ValueList      : {
+            $Type         : 'Common.ValueListType',
+            CollectionPath: 'UnitOfMeasures',
+            Parameters    : [{
+                $Type            : 'Common.ValueListParameterInOut',
                 LocalDataProperty: unitOfMeasure_ID,
                 ValueListProperty: 'ID'
             }]
@@ -78,7 +78,7 @@ annotate service.Items with @(
                 $Type: 'UI.DataField',
                 Value: description
             },
-                        {
+            {
                 $Type: 'UI.DataField',
                 Value: releaseDate
             },
@@ -139,7 +139,7 @@ annotate service.Items with @(
             Value: price
         },
     ],
-    UI.Facets         : [{
+    UI.Facets           : [{
         $Type : 'UI.ReferenceFacet',
         Target: '@UI.FieldGroup#Items',
         Label : 'Order Item',

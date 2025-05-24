@@ -15,7 +15,7 @@ define type uom_code : String(3);
 
 entity Orders : cuid, managed {
     orderID      : Integer;
-    email        : String;
+    email        : String @mandatory @assert.unique;    // @Core.Immutable
     firstName    : String;
     lastName     : String;
     country      : Association to Countries; // country, country_ID
