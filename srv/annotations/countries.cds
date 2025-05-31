@@ -6,8 +6,7 @@ annotate service.Countries with {
         TextArrangement : #TextOnly,
     };
 
-    // code
-    // @Common: {
+    // code @Common: {
     //     Text: text,
     //     TextArrangement: #TextOnly,
     // }

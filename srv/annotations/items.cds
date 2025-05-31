@@ -1,18 +1,33 @@
 using {SalesOrders as service} from '../service';
 
 annotate service.Items with {
-    itemPos          @title: 'Position' @Common.FieldControl: #ReadOnly;
-    name             @title: 'Name';
-    description      @title: 'Description';
-    releaseDate      @title: 'Released Date';
-    discontinuedDate @title: 'Discontinued Date';
-    price            @title: 'Price';
-    currencyCode     @title: 'Currency';
-    height           @title: 'Height'; //  @Measures.Unit: unitOfMeasure;
-    width            @title: 'Width'; // @Measures.Unit: unitOfMeasure;
-    depth            @title: 'Depth'; // @Measures.Unit: unitOfMeasure;
-    quantity         @title: 'Quantity';
-    unitOfMeasure    @title: 'Base unit'  @Common.IsUnit; //@Common.FieldControl : #ReadOnly;
+    itemPos          @title: '{i18n>ItemPosition}'   @Common.FieldControl: #ReadOnly;
+    name             @title: '{i18n>Name}'           @assert.notNull;
+    description      @title: '{i18n>Description}';
+    releaseDate      @title: '{i18n>ReleaseDate}';
+    discontinuedDate @title: '{i18n>DiscontinuedDate}';
+    price            @title: '{i18n>Price}'          @assert.range       : [
+        (0),
+        _
+    ];
+    currencyCode     @title: '{i18n>CurrencyCode}'   @assert.notNull  @assert.target;
+    height           @title: '{i18n>Height}'         @assert.range       : [
+        0,
+        _
+    ]; //  @Measures.Unit: unitOfMeasure;
+    width            @title: '{i18n>Width}'          @assert.range       : [
+        0,
+        _
+    ]; // @Measures.Unit: unitOfMeasure;
+    depth            @title: '{i18n>Depth}'          @assert.range       : [
+        0,
+        _
+    ]; // @Measures.Unit: unitOfMeasure;
+    quantity         @title: '{i18n>Quantity}'       @assert.range       : [
+        (0),
+        _
+    ];
+    unitOfMeasure    @title: '{i18n>UnitOfMeasure}'  @Common.IsUnit; //@Common.FieldControl : #ReadOnly;
 };
 
 annotate service.Items with {
@@ -68,81 +83,98 @@ annotate service.Items with @(
             // },
             {
                 $Type: 'UI.DataField',
-                Value: itemPos
+                Value: itemPos,
+                Label: '{i18n>ItemPosition}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: name
+                Value: name,
+                Label: '{i18n>Name}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: description
+                Value: description,
+                Label: '{i18n>Description}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: releaseDate
+                Value: price,
+                Label: '{i18n>Price}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: discontinuedDate
+                Value: currencyCode_ID,
+                Label: '{i18n>CurrencyCode}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: price
+                Value: quantity,
+                Label: '{i18n>Quantity}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: currencyCode_ID
+                Value: releaseDate,
+                Label: '{i18n>ReleaseDate}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: height
+                Value: discontinuedDate,
+                Label: '{i18n>DiscontinuedDate}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: width
+                Value: height,
+                Label: '{i18n>Height}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: depth
+                Value: width,
+                Label: '{i18n>Width}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: unitOfMeasure_ID
+                Value: depth,
+                Label: '{i18n>Depth}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: quantity
+                Value: unitOfMeasure_ID,
+                Label: '{i18n>UnitOfMeasure}'
             },
         ],
-        Label: 'Item detail'
+        Label: '{i18n>ItemDetail}'
     },
     UI.LineItem         : [
         {
             $Type: 'UI.DataField',
-            Value: itemPos
+            Value: itemPos,
+            Label: '{i18n>ItemPosition}'
         },
         {
             $Type: 'UI.DataField',
-            Value: name
+            Value: name,
+            Label: '{i18n>Name}'
         },
         {
             $Type: 'UI.DataField',
-            Value: description
+            Value: description,
+            Label: '{i18n>Description}'
         },
         {
             $Type: 'UI.DataField',
-            Value: releaseDate
+            Value: releaseDate,
+            Label: '{i18n>ReleaseDate}'
         },
         {
             $Type: 'UI.DataField',
-            Value: price
+            Value: price,
+            Label: '{i18n>Price}'
         },
     ],
     UI.Facets           : [{
         $Type : 'UI.ReferenceFacet',
         Target: '@UI.FieldGroup#Items',
-        Label : 'Order Item',
+        Label : '{i18n>OrderItem}',
         ID    : 'ItemPos'
     }]
 );

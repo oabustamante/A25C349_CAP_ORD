@@ -1,4 +1,5 @@
 const { parse } = require("@sap/cds");
+const { rawListeners } = require("@sap/cds");
 const cds = require("@sap/cds");
 const { init } = require("@sap/cds/lib/ql/cds.ql-Query");
 
@@ -12,8 +13,7 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
             //let today = new Date(Date.now());
             let today = new Date();
 
-
-            req.data.country_ID = 'MX';
+            //req.data.country_ID = 'MX';
             req.data.createdOn = today.toISOString().split('T')[0];
             req.data.status_code = 'neww';
             req.data.totalPrice = 0;
@@ -41,13 +41,21 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
         });
 
         this.before('CREATE', Orders, async (req) => {
+            // -> Next OrderID
             let result = await SELECT.one.from(Orders).columns('max(orderID) as maxOrderID');
-            //let result_d = await SELECT.one.from()
 
             result.maxOrderID ??= 0;
             let maxOrdID = parseInt(result.maxOrderID) + 1;
-            console.log("maxOrdID", maxOrdID);
+            // console.log("maxOrdID", maxOrdID);
             req.data.orderID = maxOrdID;
+            // <- Next OrderID
+            // -> TotalPrice
+            let totalPrice = 0;
+            req.data.Items.forEach((item) => {
+                totalPrice = totalPrice + (item.price * item.quantity);
+            });
+            req.data.totalPrice = totalPrice;
+            // <- TotalPrice
         });
 
         // <-
@@ -55,21 +63,3 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
     }
 }
 
-// module.exports = (srv) => {
-//     // // == READ ==
-//     // srv.on("READ", "GetSalesOrders", async (req) => {
-//     //     // ->
-//     //     // <-
-//     //     return await SELECT.from(Orders);
-//     // });
-
-//     init() {
-//         // const {Orders} = this.entities;
-
-//         // this.before("NEW", Orders.drafts, async (req) => {
-//         //     console.log("== BEFORE ==", req.data);
-//         // });
-
-//         return super.init();
-//     }
-// }

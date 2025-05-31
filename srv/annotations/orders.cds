@@ -4,18 +4,18 @@ using from './items';
 annotate service.Orders with @odata.draft.enabled;
 
 annotate service.Orders with {
-    ID            @title            : 'UUID'      @Common.FieldControl: #ReadOnly;
-    orderID       @title            : 'Order ID'  @Common.FieldControl: #ReadOnly;
-    email         @title            : 'Email'     @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-    firstName     @title: 'First Name';
-    lastName      @title: 'Last Name';
-    country       @title: 'Country';
-    createdOn     @title: 'Created On';
-    deliveryDate  @title: 'Delivery Date';
-    status        @title: 'Status';
-    totalPrice    @title            : 'Total'     @Common.FieldControl: #ReadOnly  @Measures.ISOCurrency: currencyCode;
-    currencyCode  @Common.IsCurrency: true        @Common.FieldControl: #ReadOnly;
-    imageUrl      @title: 'Imágen';
+    ID            @title            : '{i18n>UUID}'        @Common.FieldControl: #ReadOnly;
+    orderID       @title            : '{i18n>OrderID}'     @Common.FieldControl: #ReadOnly;
+    email         @title            : '{i18n>Email}'       @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  @assert.notNull;
+    firstName     @title: '{i18n>FirstName}';
+    lastName      @title: '{i18n>LastName}';
+    country       @title: '{i18n>Country}';
+    createdOn     @title: '{i18n>CreatedOn}';
+    deliveryDate  @title: '{i18n>DeliveryDate}';
+    status        @title: '{i18n>Status}';
+    totalPrice    @title            : '{i18n>TotalPrice}'  @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
+    currencyCode  @Common.IsCurrency: true                 @Common.FieldControl: #ReadOnly;
+    imageUrl      @title: '{i18n>ImageURL}';
 }
 
 annotate service.Orders with {
@@ -23,6 +23,11 @@ annotate service.Orders with {
         Text           : status.name,
         TextArrangement: #TextOnly,
     };
+    // country @Common : {
+    //     Text: country.text,
+    //     TextArrangement : #TextOnly,
+    //  };
+
     country @Common: {
         Text           : country.text,
         TextArrangement: #TextOnly,
@@ -32,27 +37,29 @@ annotate service.Orders with {
             CollectionPath: 'Countries',
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: country_ID,
-                ValueListProperty: 'ID'
+                LocalDataProperty: country_ID, //country.code, //country_ID,
+                ValueListProperty: 'ID' //'code'   // ID
             }]
         },
-    // ValueList      : {
-    //     $Type         : 'Common.ValueListType',
-    //     CollectionPath: 'Countries',
-    //     Parameters    : [{
-    //         $Type            : 'Common.ValueListParameterInOut',
-    //         LocalDataProperty: country.code,
-    //         ValueListProperty: 'code'
-    //     }]
-    // },
     };
+
+// ValueList      : {
+//     $Type         : 'Common.ValueListType',
+//     CollectionPath: 'Countries',
+//     Parameters    : [{
+//         $Type            : 'Common.ValueListParameterInOut',
+//         LocalDataProperty: country.code,
+//         ValueListProperty: 'code'
+//     }]
+// },
+
 };
 
 annotate service.Orders with @(
     UI.HeaderInfo           : {
         $Type         : 'UI.HeaderInfoType',
-        TypeName      : 'Sales Order',
-        TypeNamePlural: 'Sales Orders',
+        TypeName      : '{i18n>SalesOrder}',
+        TypeNamePlural: '{i18n>SalesOrders}',
         Title         : {
             $Type: 'UI.DataField',
             Value: orderID
@@ -72,41 +79,40 @@ annotate service.Orders with @(
     UI.LineItem             : [
         {
             $Type: 'UI.DataField',
-            Value: ID,
-        },
-        {
-            $Type: 'UI.DataField',
             Value: orderID,
+            Label: '{i18n>OrderID}'
         },
         {
             $Type: 'UI.DataField',
             Value: email,
+            Label: '{i18n>Email}'
         },
         {
             $Type: 'UI.DataField',
             Value: createdOn,
+            Label: '{i18n>CreatedOn}'
         },
         {
             $Type: 'UI.DataField',
             Value: deliveryDate,
+            Label: '{i18n>DeliveryDate}'
         },
         {
-            $Type: 'UI.DataField',
-            Value: status_code,
+            $Type      : 'UI.DataField',
+            Value      : status_code,
+            Criticality: status.criticality,
+            Label      : '{i18n>Status}'
         },
         {
             $Type: 'UI.DataField',
             Value: totalPrice,
+            Label: '{i18n>TotalPrice}'
         },
-        {
-            $Type: 'UI.DataField',
-            Value: totalPrice,
-        },
-        {
-            $Type: 'UI.DataField',
-            //Value: currencyCode_ID,
-            Value: currencyCode,
-        },
+    // {
+    //     $Type: 'UI.DataField',
+    //     //Value: currencyCode_ID,
+    //     Value: currencyCode,
+    // },
     ],
     UI.FieldGroup #HeaderKey: {
         $Type: 'UI.FieldGroupType',
@@ -126,15 +132,18 @@ annotate service.Orders with @(
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: email
+                Value: email,
+                Label: '{i18n>Email}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: firstName
+                Value: firstName,
+                Label: '{i18n>FirstName}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: lastName
+                Value: lastName,
+                Label: '{i18n>LastName}'
             }
         ]
     },
@@ -143,15 +152,18 @@ annotate service.Orders with @(
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: country_ID
+                Value: country_ID,
+                Label: '{i18n>Country}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: createdOn
+                Value: createdOn,
+                Label: '{i18n>CreatedOn}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: deliveryDate
+                Value: deliveryDate,
+                Label: '{i18n>DeliveryDate}'
             }
         ]
     },
@@ -161,7 +173,6 @@ annotate service.Orders with @(
             {
                 $Type                  : 'UI.DataField',
                 Value                  : status_code,
-                //Criticality : status
                 ![@Common.FieldControl]: {$edmJson: {$If: [
                     {$Eq: [
                         {$Path: 'IsActiveEntity'},
@@ -173,11 +184,13 @@ annotate service.Orders with @(
             },
             {
                 $Type: 'UI.DataField',
-                Value: totalPrice
+                Value: totalPrice,
+                Label: '{i18n>TotalPrice}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: imageUrl
+                Value: imageUrl,
+                Label: '{i18n>ImageURL}'
             }
         ]
     },
