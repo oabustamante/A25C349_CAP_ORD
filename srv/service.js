@@ -9,6 +9,15 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
         // ->
         const {Orders, Items} = this.entities;
         //
+
+        this.after('READ', Orders, async (orders) => {
+            for(let order of orders) {
+                if (order.totalPrice > 0) {
+                    order.priceWithVat = order.totalPrice + (order.totalPrice * (1/100) );
+                }
+            }
+        });
+
         this.before('NEW', Orders.drafts, async (req) => {
             //let today = new Date(Date.now());
             let today = new Date();

@@ -4,17 +4,18 @@ using from './items';
 annotate service.Orders with @odata.draft.enabled;
 
 annotate service.Orders with {
-    ID            @title            : '{i18n>UUID}'        @Common.FieldControl: #ReadOnly;
-    orderID       @title            : '{i18n>OrderID}'     @Common.FieldControl: #ReadOnly;
-    email         @title            : '{i18n>Email}'       @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  @assert.notNull;
+    ID            @title            : '{i18n>UUID}'          @Common.FieldControl: #ReadOnly;
+    orderID       @title            : '{i18n>OrderID}'       @Common.FieldControl: #ReadOnly;
+    email         @title            : '{i18n>Email}'         @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  @assert.notNull;
     firstName     @title: '{i18n>FirstName}';
     lastName      @title: '{i18n>LastName}';
     country       @title: '{i18n>Country}';
     createdOn     @title: '{i18n>CreatedOn}';
     deliveryDate  @title: '{i18n>DeliveryDate}';
     status        @title: '{i18n>Status}';
-    totalPrice    @title            : '{i18n>TotalPrice}'  @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
-    currencyCode  @Common.IsCurrency: true                 @Common.FieldControl: #ReadOnly;
+    totalPrice    @title: '{i18n>TotalPrice}'    @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
+    priceWithVat  @title: '{i18n>PriceWithVAT}'  @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
+    currencyCode  @Common.IsCurrency: true                   @Common.FieldControl: #ReadOnly;
     imageUrl      @title: '{i18n>ImageURL}';
 }
 
@@ -64,6 +65,7 @@ annotate service.Orders with @(
             $Type: 'UI.DataField',
             Value: orderID
         },
+        //ImageUrl      : 'imageUrl',
     // Description   : {
     //     $Type: 'UI.DataField',
     //     Value: email
@@ -82,6 +84,10 @@ annotate service.Orders with @(
             Value: orderID,
             Label: '{i18n>OrderID}'
         },
+        // {
+        //     $Type: 'UI.DataField',
+        //     Value: imageUrl
+        // },
         {
             $Type: 'UI.DataField',
             Value: email,
@@ -127,6 +133,14 @@ annotate service.Orders with @(
             }
         ]
     },
+    // UI.FieldGroup #HeaderImg : {
+    //     $Type: 'UI.FieldGroupType',
+    //     Data: [{
+    //         $Type: 'UI.DataField',
+    //         Value: imageUrl,
+    //         Label: ''
+    //     }]
+    // },
     UI.FieldGroup #HeaderA  : {
         $Type: 'UI.FieldGroupType',
         Data : [
@@ -194,14 +208,20 @@ annotate service.Orders with @(
             }
         ]
     },
-    // UI.FieldGroup #HeaderD: {
-    //     $Type: 'UI.FieldGroupType',
-    //     Data : [{
-    //         $Type: 'UI.DataField',
-    //         Value: imageUrl
-    //     }]
-    // },
+    UI.FieldGroup #HeaderD  : {
+        $Type: 'UI.FieldGroupType',
+        Data : [{
+            $Type: 'UI.DataField',
+            Value: priceWithVat,
+            Label: '{i18n>PriceWithVAT}'
+        }]
+    },
     UI.HeaderFacets         : [
+        // {
+        //     $Type : 'UI.ReferenceFacet',
+        //     Target: '@UI.FieldGroup#HeaderImg',
+        //     ID    : 'HeaderImg'
+        // },
         {
             $Type : 'UI.ReferenceFacet',
             Target: '@UI.FieldGroup#HeaderKey',
@@ -222,16 +242,16 @@ annotate service.Orders with @(
             Target: '@UI.FieldGroup#HeaderC',
             ID    : 'HeaderC'
         },
-    // {
-    //     $Type : 'UI.ReferenceFacet',
-    //     Target: '@UI.FieldGroup#HeaderD',
-    //     ID    : 'HeaderD'
-    // }
+        {
+            $Type : 'UI.ReferenceFacet',
+            Target: '@UI.FieldGroup#HeaderD',
+            ID    : 'HeaderD'
+        },
     ],
     UI.Facets               : [{
         $Type : 'UI.ReferenceFacet',
         Target: 'Items/@UI.LineItem',
-        Label : 'Order Items',
+        Label : '{i18n>OrderItems}',
         ID    : 'Items'
     }]
 );
