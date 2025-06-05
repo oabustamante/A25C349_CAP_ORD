@@ -4,45 +4,48 @@ using from './items';
 annotate service.Orders with @odata.draft.enabled;
 
 annotate service.Orders with {
-    ID            @title            : '{i18n>UUID}'          @Common.FieldControl: #ReadOnly;
-    orderID       @title            : '{i18n>OrderID}'       @Common.FieldControl: #ReadOnly;
-    email         @title            : '{i18n>Email}'         @assert.format      : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  @assert.notNull;
+    ID            @title: '{i18n>UUID}'          @Common.FieldControl : #ReadOnly;
+    orderID       @title: '{i18n>OrderID}'       @Common.FieldControl : #ReadOnly;
+    email         @title: '{i18n>Email}'         @assert.format       : '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'  @assert.notNull;
     firstName     @title: '{i18n>FirstName}';
     lastName      @title: '{i18n>LastName}';
     country       @title: '{i18n>Country}';
     createdOn     @title: '{i18n>CreatedOn}';
     deliveryDate  @title: '{i18n>DeliveryDate}';
     status        @title: '{i18n>Status}';
-    totalPrice    @title: '{i18n>TotalPrice}'    @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
-    priceWithVat  @title: '{i18n>PriceWithVAT}'  @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
-    currencyCode  @Common.IsCurrency: true                   @Common.FieldControl: #ReadOnly;
+    // totalPrice    @title: '{i18n>TotalPrice}'    @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
+    // priceWithVat  @title: '{i18n>PriceWithVAT}'  @Common.FieldControl: #ReadOnly                                           @Measures.ISOCurrency: currencyCode;
+    // currencyCode  @Common.IsCurrency: true                   @Common.FieldControl: #ReadOnly;
+    totalPrice    @title: '{i18n>TotalPrice}'    @Measures.ISOCurrency: currency_code                                       @Common.FieldControl: #ReadOnly;
+    priceWithVat  @title: '{i18n>PriceWithVAT}'  @Measures.ISOCurrency: currency_code                                       @Common.FieldControl: #ReadOnly;
+    currency      @title: '{i18n>CurrencyCode}'  @Common.IsCurrency   : true                                                @assert.target;
     imageUrl      @title: '{i18n>ImageURL}';
 }
 
 annotate service.Orders with {
-    status  @Common: {
+    status @Common: {
         Text           : status.name,
         TextArrangement: #TextOnly,
     };
-    // country @Common : {
-    //     Text: country.text,
-    //     TextArrangement : #TextOnly,
-    //  };
+// country @Common : {
+//     Text: country.text,
+//     TextArrangement : #TextOnly,
+//  };
 
-    country @Common: {
-        Text           : country.text,
-        TextArrangement: #TextOnly,
-        //ValueListWithFixedValues,
-        ValueList      : {
-            $Type         : 'Common.ValueListType',
-            CollectionPath: 'Countries',
-            Parameters    : [{
-                $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: country_ID, //country.code, //country_ID,
-                ValueListProperty: 'ID' //'code'   // ID
-            }]
-        },
-    };
+// country @Common: {
+//     Text           : country.text,
+//     TextArrangement: #TextOnly,
+//     //ValueListWithFixedValues,
+//     ValueList      : {
+//         $Type         : 'Common.ValueListType',
+//         CollectionPath: 'Countries',
+//         Parameters    : [{
+//             $Type            : 'Common.ValueListParameterInOut',
+//             LocalDataProperty: country_ID, //country.code, //country_ID,
+//             ValueListProperty: 'ID' //'code'   // ID
+//         }]
+//     },
+// };
 
 // ValueList      : {
 //     $Type         : 'Common.ValueListType',
@@ -57,7 +60,53 @@ annotate service.Orders with {
 };
 
 annotate service.Orders with @(
-    UI.HeaderInfo           : {
+    UI.UpdateHidden                : {$edmJson: {$If: [
+        { $Or: [
+            {$Eq: [ {$Path: 'status_code'}, 'delivered' ]},
+            {$Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
+        ]},
+        true,
+        false
+    ]}},
+
+    UI.DeleteHidden                : {$edmJson: {$If: [
+        { $Or: [
+            { $Eq: [ {$Path: 'status_code'}, 'delivered' ]},
+            { $Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
+        ]},
+        true,
+        false
+    ]}},
+
+    // Capabilities.Deletable: {
+    //                     $edmJson: {
+    //                         $If: [ {
+    //                             $Or: [
+    //                                 {
+    //                                     $Eq: [ { $Path: 'status_code' }, 'delivered' ]
+    //                                 },
+    //                                 {
+    //                                     $Eq: [ { $Path: 'status_code' }, 'cancelled' ]
+    //                                 }
+    //                             ]
+    //                         },
+    //                         true,
+    //                         false ]
+    //                     }
+    //                 },
+
+    Capabilities.DeleteRestrictions: {Deletable: false,
+    },
+
+    Capabilities.FilterRestrictions: {
+        $Type                       : 'Capabilities.FilterRestrictionsType',
+        FilterExpressionRestrictions: [{
+            $Type             : 'Capabilities.FilterExpressionRestrictionType',
+            Property          : orderID,
+            AllowedExpressions: 'SearchExpression'
+        }]
+    },
+    UI.HeaderInfo                  : {
         $Type         : 'UI.HeaderInfoType',
         TypeName      : '{i18n>SalesOrder}',
         TypeNamePlural: '{i18n>SalesOrders}',
@@ -65,20 +114,20 @@ annotate service.Orders with @(
             $Type: 'UI.DataField',
             Value: orderID
         },
-        //ImageUrl      : 'imageUrl',
+    //ImageUrl      : 'imageUrl',
     // Description   : {
     //     $Type: 'UI.DataField',
     //     Value: email
     // }
     },
-    UI.SelectionFields      : [
+    UI.SelectionFields             : [
         orderID,
         email,
         createdOn,
         deliveryDate,
         status_code
     ],
-    UI.LineItem             : [
+    UI.LineItem                    : [
         {
             $Type: 'UI.DataField',
             Value: orderID,
@@ -120,7 +169,7 @@ annotate service.Orders with @(
     //     Value: currencyCode,
     // },
     ],
-    UI.FieldGroup #HeaderKey: {
+    UI.FieldGroup #HeaderKey       : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
@@ -141,7 +190,7 @@ annotate service.Orders with @(
     //         Label: ''
     //     }]
     // },
-    UI.FieldGroup #HeaderA  : {
+    UI.FieldGroup #HeaderA         : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
@@ -161,12 +210,12 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderB  : {
+    UI.FieldGroup #HeaderB         : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
                 $Type: 'UI.DataField',
-                Value: country_ID,
+                Value: country_code, //country_ID,
                 Label: '{i18n>Country}'
             },
             {
@@ -181,20 +230,37 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderC  : {
+    UI.FieldGroup #HeaderC         : {
         $Type: 'UI.FieldGroupType',
         Data : [
             {
                 $Type                  : 'UI.DataField',
                 Value                  : status_code,
-                ![@Common.FieldControl]: {$edmJson: {$If: [
-                    {$Eq: [
-                        {$Path: 'IsActiveEntity'},
-                        false
-                    ]},
-                    3,
-                    1
-                ]}}
+                ![@Common.FieldControl]: { $edmJson: { $If: [
+                    { $Lt: [ {$Path: 'orderID'}, 1 ], },
+                    1,
+                    3
+                ]
+                // $If: [ {
+                //         $Or: [
+                //             {
+                //                 $Lt: [ { $Path: 'orderID' }, 1 ]
+                //             },
+                //             // {
+                //             //     $In: [ { $Path: 'status_code' }, 'delivered', 'cancelled' ]
+                //             // }
+                //              {
+                //                  $Eq: [ { $Path: 'status_code' }, 'delivered' ]
+                //              },
+                //              {
+                //                  $Eq: [ { $Path: 'status_code' }, 'cancelled' ]
+                //              }
+                //         ]
+                //     },
+                //     1,
+                //     3
+                // ]
+                }}
             },
             {
                 $Type: 'UI.DataField',
@@ -208,7 +274,7 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderD  : {
+    UI.FieldGroup #HeaderD         : {
         $Type: 'UI.FieldGroupType',
         Data : [{
             $Type: 'UI.DataField',
@@ -216,7 +282,7 @@ annotate service.Orders with @(
             Label: '{i18n>PriceWithVAT}'
         }]
     },
-    UI.HeaderFacets         : [
+    UI.HeaderFacets                : [
         // {
         //     $Type : 'UI.ReferenceFacet',
         //     Target: '@UI.FieldGroup#HeaderImg',
@@ -248,7 +314,7 @@ annotate service.Orders with @(
             ID    : 'HeaderD'
         },
     ],
-    UI.Facets               : [{
+    UI.Facets                      : [{
         $Type : 'UI.ReferenceFacet',
         Target: 'Items/@UI.LineItem',
         Label : '{i18n>OrderItems}',

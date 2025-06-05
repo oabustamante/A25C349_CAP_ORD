@@ -3,7 +3,9 @@ namespace com.logali;
 using {
     cuid,
     managed,
-    sap.common.CodeList
+    sap.common.CodeList,
+    sap.common.Countries,
+    sap.common.Currencies
 } from '@sap/cds/common';
 
 define type dec_10_2 : Decimal(10, 2); // Price
@@ -24,7 +26,8 @@ entity Orders : cuid, managed {
             status       : Association to Status; // status, status_code
             totalPrice   : dec_10_2;
     virtual priceWithVat : dec_10_2;
-            currencyCode : cur_code; //Association to Currencies; // currencyCode, currencyCode_ID - cur_code;
+            //currencyCode : cur_code; //Association to Currencies; // currencyCode, currencyCode_ID - cur_code;
+            currency     : Association to Currencies;
             //imageUrl     : LargeBinary  @Core.MediaType: imageType  @Core.ContentDisposition.Filename: fileName;
             //imageType    : String       @Core.IsMediaType;
             //fileName : String;
@@ -36,12 +39,13 @@ entity Orders : cuid, managed {
 entity Items : cuid {
     parentUUID       : Association to Orders;
     itemPos          : Integer;
-    name             : String                    @mandatory;
+    name             : String @mandatory;
     description      : String;
     releaseDate      : Date;
     discontinuedDate : Date;
     price            : dec_10_2 default 0;
-    currencyCode     : Association to Currencies @mandatory; //cur_code default 'US';
+    //currencyCode     : Association to Currencies @mandatory; //cur_code default 'US';
+    currency         : Association to Currencies;
     height           : dec_7_3 default 0;
     width            : dec_7_3 default 0;
     depth            : dec_7_3 default 0;
@@ -67,15 +71,15 @@ entity Status : CodeList {
 /**
  * Value Helps
  **/
-entity Countries : cuid {
-    code : String(3);
-    text : String(40);
-};
+// entity Countries : cuid {
+//     code : String(3);
+//     text : String(40);
+// };
 
-entity Currencies : cuid {
-    code : String(3);
-    text : String(40);
-};
+// entity Currencies : cuid {
+//     code : String(3);
+//     text : String(40);
+// };
 
 entity UnitOfMeasures : cuid {
     code : String(3);

@@ -1,29 +1,29 @@
 using {SalesOrders as service} from '../service';
 
 annotate service.Items with {
-    itemPos          @title: '{i18n>ItemPosition}'   @Common.FieldControl: #ReadOnly;
+    itemPos          @title: '{i18n>ItemPosition}'   @Common.FieldControl : #ReadOnly;
     name             @title: '{i18n>Name}'           @assert.notNull;
     description      @title: '{i18n>Description}';
     releaseDate      @title: '{i18n>ReleaseDate}';
     discontinuedDate @title: '{i18n>DiscontinuedDate}';
-    price            @title: '{i18n>Price}'          @assert.range       : [
+    price            @title: '{i18n>Price}'          @Measures.ISOCurrency: currency_code  @assert.range: [
         (0),
         _
     ];
-    currencyCode     @title: '{i18n>CurrencyCode}'   @assert.notNull  @assert.target;
-    height           @title: '{i18n>Height}'         @assert.range       : [
+    currency         @title: '{i18n>CurrencyCode}'   @Common.IsCurrency   : true           @assert.notNull  @assert.target;
+    height           @title: '{i18n>Height}'         @assert.range        : [
         0,
         _
     ]; //  @Measures.Unit: unitOfMeasure;
-    width            @title: '{i18n>Width}'          @assert.range       : [
+    width            @title: '{i18n>Width}'          @assert.range        : [
         0,
         _
     ]; // @Measures.Unit: unitOfMeasure;
-    depth            @title: '{i18n>Depth}'          @assert.range       : [
+    depth            @title: '{i18n>Depth}'          @assert.range        : [
         0,
         _
     ]; // @Measures.Unit: unitOfMeasure;
-    quantity         @title: '{i18n>Quantity}'       @assert.range       : [
+    quantity         @title: '{i18n>Quantity}'       @assert.range        : [
         (0),
         _
     ];
@@ -31,19 +31,19 @@ annotate service.Items with {
 };
 
 annotate service.Items with {
-    currencyCode  @Common: {
-        Text           : currencyCode.code,
-        TextArrangement: #TextOnly,
-        ValueList      : {
-            $Type         : 'Common.ValueListType',
-            CollectionPath: 'Currencies',
-            Parameters    : [{
-                $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: currencyCode_ID,
-                ValueListProperty: 'ID'
-            }]
-        },
-    };
+    // currencyCode  @Common: {
+    //     Text           : currencyCode.code,
+    //     TextArrangement: #TextOnly,
+    //     ValueList      : {
+    //         $Type         : 'Common.ValueListType',
+    //         CollectionPath: 'Currencies',
+    //         Parameters    : [{
+    //             $Type            : 'Common.ValueListParameterInOut',
+    //             LocalDataProperty: currencyCode_ID,
+    //             ValueListProperty: 'ID'
+    //         }]
+    //     },
+    // };
     unitOfMeasure @Common: {
         Text           : unitOfMeasure.code,
         TextArrangement: #TextOnly,
@@ -101,11 +101,11 @@ annotate service.Items with @(
                 Value: price,
                 Label: '{i18n>Price}'
             },
-            {
-                $Type: 'UI.DataField',
-                Value: currencyCode_ID,
-                Label: '{i18n>CurrencyCode}'
-            },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: currency_code, //currencyCode_ID,
+            //     Label: '{i18n>CurrencyCode}'
+            // },
             {
                 $Type: 'UI.DataField',
                 Value: quantity,

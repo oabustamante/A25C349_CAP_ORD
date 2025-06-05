@@ -1,1 +1,1 @@
-ID,parentUUID,itemPos,name,description,releaseDate,discontinuedDate,price,currencyCode_ID,height,width,depth,quantity,unitOfMeasure_ID
+ID,parentUUID,itemPos,name,description,releaseDate,discontinuedDate,price,currency_code,height,width,depth,quantity,unitOfMeasure_ID

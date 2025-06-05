@@ -26,7 +26,7 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
             req.data.createdOn = today.toISOString().split('T')[0];
             req.data.status_code = 'neww';
             req.data.totalPrice = 0;
-            req.data.currencyCode = 'MXN';
+            //req.data.currencyCode = 'MXN';
         });
 
         this.before('NEW', Items.drafts, async (req) => {

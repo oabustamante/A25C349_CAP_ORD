@@ -6,7 +6,7 @@ service SalesOrders {
     // Code List
     entity Status         as projection on entities.Status;
     // Value Helps
-    entity Countries      as projection on entities.Countries;
-    entity Currencies     as projection on entities.Currencies;
+    //entity Countries      as projection on entities.Countries;
+    //entity Currencies     as projection on entities.Currencies;
     entity UnitOfMeasures as projection on entities.UnitOfMeasures;
 }

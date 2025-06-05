@@ -1,1 +1,1 @@
-ID,orderID,email,firstName,lastName,country_ID,createdOn,deliveryDate,status_code,totalPrice,currencyCode_ID,imageUrl,createdAt,createdBy,modifiedAt,modifiedBy
+ID,orderID,email,firstName,lastName,country_ID,createdOn,deliveryDate,status_code,totalPrice,currency_code,imageUrl,createdAt,createdBy,modifiedAt,modifiedBy
