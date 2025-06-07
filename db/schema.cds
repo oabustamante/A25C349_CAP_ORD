@@ -50,7 +50,8 @@ entity Items : cuid {
     width            : dec_7_3 default 0;
     depth            : dec_7_3 default 0;
     quantity         : dec_6_3 default 0;
-    unitOfMeasure    : Association to UnitOfMeasures; //uom_code default 'CM';
+    //unitOfMeasure    : Association to UnitOfMeasures; //uom_code default 'CM';
+    unitOfMeasure    : Association to UnitsOfMeasures;
 };
 
 /**
@@ -81,7 +82,12 @@ entity Status : CodeList {
 //     text : String(40);
 // };
 
-entity UnitOfMeasures : cuid {
-    code : String(3);
+// entity UnitOfMeasures : cuid {
+//     code : String(3);
+//     text : String(40);
+// };
+
+entity UnitsOfMeasures {
+    Key code : String(3);
     text : String(40);
 };

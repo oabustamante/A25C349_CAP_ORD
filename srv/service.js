@@ -5,7 +5,7 @@ const { init } = require("@sap/cds/lib/ql/cds.ql-Query");
 
 module.exports = class ManageSalesOrders extends cds.ApplicationService {
     //
-    async init () {
+    init () {
         // ->
         const {Orders, Items} = this.entities;
         //
@@ -67,8 +67,45 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
             // <- TotalPrice
         });
 
+        this.before('UPDATE', Orders, async (req) => {
+            if (req.data.createdOn >= req.data.deliveryDate ) {
+                return req.reject(400, `Delivery date ${req.data.deliveryDate} must be greater than create date!`);
+                //return;
+            }
+            if (req.data.totalPrice < 1 && req.data.status_code != 'neww' ) {
+                return req.reject(400, `At least 1 item with price and quantity to change Order status`);
+                //return;
+            }
+        });
+
+        this.before('DELETE', async (req) => {
+            if (req.data.status_code == 'delivered' || req.data.status_code == 'cancelled') {
+                return req.reject(400, `Order status delivered or cancelled are not deletable!`);
+                //return;
+            }
+        });
+
+        this.on('cancelOrder', Orders, async (req) => {
+            //console.log('Req.Data: ', req.params[0].ID);
+            let order = await cds
+                .tx(req)
+                .read(Orders)
+                 .where({ID: req.params[0].ID});
+            if (order[0].status_code !== 'delivered' && order[0].status_code !== 'cancelled') {
+                let result = await cds
+                    .tx(req)
+                    .update(Orders, {ID: req.params[0].ID})
+                    .with({
+                        status_code: 'cancelled'
+                    });
+            } else {
+                req.error(409, 'No es posible cancelar');
+            }
+            // req.info()
+        });
+
         // <-
-        return await super.init();
+        return super.init();
     }
 }
 

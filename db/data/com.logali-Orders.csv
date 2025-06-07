@@ -1,1 +1,13 @@
-ID,orderID,email,firstName,lastName,country_ID,createdOn,deliveryDate,status_code,totalPrice,currency_code,imageUrl,createdAt,createdBy,modifiedAt,modifiedBy
+ID,orderID,email,firstName,lastName,country_code,createdOn,deliveryDate,status_code,totalPrice,currency_code,imageUrl,createdAt,createdBy,modifiedAt,modifiedBy
+6c3e94a6-5792-45e9-886a-547be191f0f2,1,sblade@mk1.com,Sonya,Blade,US,2025-01-03,2025-01-09,delivered,6.74,USD,https://www.botanicalinterests.com/cdn/shop/files/Radicans-Gardenia-3.jpg?v=1740641927&width=713,2025-01-03,adm,,
+f9e78feb-8366-4fdf-be06-2cf21891623b,2,jcage@mk1.com,Johnny,Cage,US,2025-01-07,2025-01-12,sent,2.99,USD,,2025-01-07,adm,,
+b98d91af-f258-4b59-b25c-b4db61c847a3,3,lkang@mk1.com,Liu,Kang,CN,2025-01-11,2025-01-14,preparing,83.44,USD,,2025-01-11,adm,,
+7c602a28-f83d-447f-845b-2b9526fa0997,4,lkang@mk1.com,Liu,Kang,CN,2025-01-14,2025-01-18,cancelled,0,USD,,2025-01-14,adm,,
+804741c6-1ea8-428e-a1bb-8e6f396c0214,5,szero@mk1.com,Sub,Zero,CH,2025-01-14,2025-01-16,neww,0,USD,,2025-01-18,adm,,
+2037a7f5-020c-4634-a9e2-726a029d46f6,6,klao@mk2.com,King,Lao,AU,2025-02-03,2025-02-17,cancelled,0,USD,,2025-02-03,adm,,
+940fe25a-6ea4-40bb-b386-654a54c53322,7,jax@mk2.com,Juancho,Anastacio,US,2025-02-09,2025-02-12,cancelled,0,USD,,2025-02-09,adm,,
+432838eb-a6a1-4f8d-bb9e-3afe8befe0d2,8,skhan@mk2.com,Shao,Khan,CH,2025-02-11,2025-02-14,neww,0,USD,,2025-02-11,adm,,
+392b6391-323f-4c39-9069-1fd050ea4ea2,9,sblade@mk1.com,Sonya,Blade,US,2025-05-01,2025-05-04,neww,0,USD,,2025-06-01,adm,,
+5645b401-6f31-4e7a-9036-60b87f8830fa,10,jcage@mk1.com,Johnny,Cage,US,2025-06-01,2025-06-08,neww,0,USD,,2025-06-01,adm,,
+7d29ceff-3ece-40e3-bbd8-baa86e948d21,11,sblade@mk1.com,Sonya,Blade,US,2025-05-01,2025-05-04,neww,0,USD,,2025-06-01,adm,,
+7ac18bf9-18f5-4a2a-9638-8eb85bcbcb52,12,jcage@mk1.com,Johnny,Cage,US,2025-06-01,2025-06-08,neww,0,USD,,2025-06-01,adm,,

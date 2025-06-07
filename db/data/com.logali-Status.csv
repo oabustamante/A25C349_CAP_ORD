@@ -1,6 +1,6 @@
 code,name,criticality
-neww,New,0
+neww,New,4
 preparing,Preparing,5
 sent,Sent,2
-delivered,Delivered,4
-cancelled,Cancelled,-1
+delivered,Delivered,3
+cancelled,Cancelled,1

@@ -69,14 +69,14 @@ annotate service.Orders with @(
         false
     ]}},
 
-    UI.DeleteHidden                : {$edmJson: {$If: [
-        { $Or: [
-            { $Eq: [ {$Path: 'status_code'}, 'delivered' ]},
-            { $Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
-        ]},
-        true,
-        false
-    ]}},
+    // UI.DeleteHidden                : {$edmJson: {$If: [
+    //     { $Or: [
+    //         { $Eq: [ {$Path: 'status_code'}, 'delivered' ]},
+    //         { $Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
+    //     ]},
+    //     true,
+    //     false
+    // ]}},
 
     // Capabilities.Deletable: {
     //                     $edmJson: {
@@ -95,8 +95,14 @@ annotate service.Orders with @(
     //                     }
     //                 },
 
-    Capabilities.DeleteRestrictions: {Deletable: false,
-    },
+    // Capabilities.DeleteRestrictions: {Deletable: false,
+    // },
+
+    // Common.SideEffects: {
+    //     $Type: 'Common.SideEffectsType',
+    //     SourceProperties: ['status_code'],
+    //     TargetProperties: ['status_code'],
+    // },
 
     Capabilities.FilterRestrictions: {
         $Type                       : 'Capabilities.FilterRestrictionsType',
@@ -131,7 +137,11 @@ annotate service.Orders with @(
         {
             $Type: 'UI.DataField',
             Value: orderID,
-            Label: '{i18n>OrderID}'
+            Label: '{i18n>OrderID}',
+            ![@HTML5.CssDefaults]: {
+                $Type: 'HTML5.CssDefaultsType',
+                width: '05rem'
+            }
         },
         // {
         //     $Type: 'UI.DataField',
@@ -140,7 +150,11 @@ annotate service.Orders with @(
         {
             $Type: 'UI.DataField',
             Value: email,
-            Label: '{i18n>Email}'
+            Label: '{i18n>Email}',
+            ![@HTML5.CssDefaults]: {
+                $Type: 'HTML5.CssDefaultsType',
+                width: '12rem'
+            }
         },
         {
             $Type: 'UI.DataField',
@@ -156,18 +170,28 @@ annotate service.Orders with @(
             $Type      : 'UI.DataField',
             Value      : status_code,
             Criticality: status.criticality,
-            Label      : '{i18n>Status}'
+            Label      : '{i18n>Status}',
+            ![@HTML5.CssDefaults]: {
+                $Type: 'HTML5.CssDefaultsType',
+                width: '7rem'
+            }
         },
         {
             $Type: 'UI.DataField',
             Value: totalPrice,
             Label: '{i18n>TotalPrice}'
         },
-    // {
-    //     $Type: 'UI.DataField',
-    //     //Value: currencyCode_ID,
-    //     Value: currencyCode,
-    // },
+        {
+            $Type: 'UI.DataField',
+            Value: priceWithVat,
+            Label: '{i18n>PriceWithVAT}'
+        },
+        {
+            $Type: 'UI.DataFieldForAction',
+            Action: 'SalesOrders.cancelOrder',
+            Label: '{i18n>CancelOrder}',
+            //Inline: true
+        }
     ],
     UI.FieldGroup #HeaderKey       : {
         $Type: 'UI.FieldGroupType',
@@ -319,5 +343,13 @@ annotate service.Orders with @(
         Target: 'Items/@UI.LineItem',
         Label : '{i18n>OrderItems}',
         ID    : 'Items'
-    }]
+    }],
+    // UI.Identification: [{
+    //     $Type: 'UI.DataFieldForAction',
+    //     Action: 'cancelOrder',
+    //     Label: 'Cancel Order',
+    //     Criticality: #Negative
+    // }]
+
 );
+

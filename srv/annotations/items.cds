@@ -44,16 +44,31 @@ annotate service.Items with {
     //         }]
     //     },
     // };
+
+    // unitOfMeasure @Common: {
+    //     Text           : unitOfMeasure.code,
+    //     TextArrangement: #TextOnly,
+    //     ValueList      : {
+    //         $Type         : 'Common.ValueListType',
+    //         CollectionPath: 'UnitOfMeasures',
+    //         Parameters    : [{
+    //             $Type            : 'Common.ValueListParameterInOut',
+    //             LocalDataProperty: unitOfMeasure_ID,
+    //             ValueListProperty: 'ID'
+    //         }]
+    //     },
+    // };
+
     unitOfMeasure @Common: {
-        Text           : unitOfMeasure.code,
+        Text           : unitOfMeasure.text,
         TextArrangement: #TextOnly,
         ValueList      : {
             $Type         : 'Common.ValueListType',
-            CollectionPath: 'UnitOfMeasures',
+            CollectionPath: 'UnitsOfMeasures',
             Parameters    : [{
                 $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: unitOfMeasure_ID,
-                ValueListProperty: 'ID'
+                LocalDataProperty: unitOfMeasure_code,
+                ValueListProperty: 'code'
             }]
         },
     };
@@ -136,9 +151,14 @@ annotate service.Items with @(
                 Value: depth,
                 Label: '{i18n>Depth}'
             },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: unitOfMeasure_ID,
+            //     Label: '{i18n>UnitOfMeasure}'
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: unitOfMeasure_ID,
+                Value: unitOfMeasure_code,
                 Label: '{i18n>UnitOfMeasure}'
             },
         ],

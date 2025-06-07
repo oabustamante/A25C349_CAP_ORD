@@ -1,1 +1,8 @@
-ID,parentUUID,itemPos,name,description,releaseDate,discontinuedDate,price,currency_code,height,width,depth,quantity,unitOfMeasure_ID
+ID,parentUUID_ID,itemPos,name,description,releaseDate,discontinuedDate,price,currency_code,height,width,depth,quantity,unitOfMeasure_code
+e5155176-4c33-4513-8a65-15dde5944305,6c3e94a6-5792-45e9-886a-547be191f0f2,1,Jewel Sweet Corn,Martian Jewel Sweet Corn Seed,2024-12-01,2025-01-20,2.25,USD,0,0,0,23,CM
+96c5abe3-ee8f-45aa-9787-f7e0209a07ca,6c3e94a6-5792-45e9-886a-547be191f0f2,2,H & C Sweet Corn,Henoy and Cream Sweet Corn Seed,2024-11-24,2025-01-11,4.49,USD,0,0,0,20,CM
+7521eea3-88f7-4eaf-8487-a35df4b93867,f9e78feb-8366-4fdf-be06-2cf21891623b,1,Purple Tomatillo,Purple Tomatillo Seed,2024-11-04,2025-02-19,2.99,USD,0,0,0,20,CM
+0a6c379c-e40e-497b-a4e3-11898167ef39,b98d91af-f258-4b59-b25c-b4db61c847a3,1,Bluebonet,Bluebonet Seed,2024-12-08,2025-02-20,3.49,USD,0,0,0,18,CM
+d6413885-ab3a-452d-a65a-2f0e7acd0be9,b98d91af-f258-4b59-b25c-b4db61c847a3,2,Radicans Gardenias,Radicans Gardenias,2024-12-25,2025-03-14,79.95,USD,0,0,0,32,CM
+
+
