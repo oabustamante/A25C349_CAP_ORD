@@ -78,15 +78,15 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
             }
         });
 
-        this.before('DELETE', async (req) => {
-            if (req.data.status_code == 'delivered' || req.data.status_code == 'cancelled') {
+        this.before('DELETE', Orders, async (req) => {
+            let order = await SELECT.one.from(Orders).columns('status_code').where({ID: req.data.ID});
+
+            if (order.status_code == 'delivered' || order.status_code == 'cancelled') {
                 return req.reject(400, `Order status delivered or cancelled are not deletable!`);
-                //return;
             }
         });
 
-        this.on('cancelOrder', Orders, async (req) => {
-            //console.log('Req.Data: ', req.params[0].ID);
+        this.on('cancelOrder',Orders, async (req) => {
             let order = await cds
                 .tx(req)
                 .read(Orders)
@@ -99,7 +99,7 @@ module.exports = class ManageSalesOrders extends cds.ApplicationService {
                         status_code: 'cancelled'
                     });
             } else {
-                req.error(409, 'No es posible cancelar');
+                req.error(409, 'Delivered or cancelled order cannot be changed');
             }
             // req.info()
         });

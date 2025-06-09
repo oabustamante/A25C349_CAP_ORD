@@ -2,8 +2,6 @@ using {com.logali as entities} from '../db/schema';
 
 service SalesOrders {
     entity Orders         as projection on entities.Orders  actions {
-        //@(Common.SideEffects.TargetProperties: ['/status_code'])
-        //@Common.SideEffects: {TargetEntities:['/SalesOrders.Orders']}
         @Common.SideEffects: {
             $Type: 'Common.SideEffectsType',
             TargetProperties: [

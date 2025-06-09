@@ -31,7 +31,7 @@ entity Orders : cuid, managed {
             //imageUrl     : LargeBinary  @Core.MediaType: imageType  @Core.ContentDisposition.Filename: fileName;
             //imageType    : String       @Core.IsMediaType;
             //fileName : String;
-            imageUrl     : LargeString; //@UI.IsImageURL;
+            imageUrl     : String; //@UI.IsImageURL;
             Items        : Composition of many Items
                                on Items.parentUUID = $self;
 };

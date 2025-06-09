@@ -69,14 +69,14 @@ annotate service.Orders with @(
         false
     ]}},
 
-    // UI.DeleteHidden                : {$edmJson: {$If: [
-    //     { $Or: [
-    //         { $Eq: [ {$Path: 'status_code'}, 'delivered' ]},
-    //         { $Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
-    //     ]},
-    //     true,
-    //     false
-    // ]}},
+    UI.DeleteHidden                : {$edmJson: {$If: [
+        { $Or: [
+            { $Eq: [ {$Path: 'status_code'}, 'delivered' ]},
+            { $Eq: [ {$Path: 'status_code'}, 'cancelled' ]}
+        ]},
+        true,
+        false
+    ]}},
 
     // Capabilities.Deletable: {
     //                     $edmJson: {
@@ -120,7 +120,7 @@ annotate service.Orders with @(
             $Type: 'UI.DataField',
             Value: orderID
         },
-    //ImageUrl      : 'imageUrl',
+    ImageUrl      : imageUrl,
     // Description   : {
     //     $Type: 'UI.DataField',
     //     Value: email
@@ -196,14 +196,20 @@ annotate service.Orders with @(
     UI.FieldGroup #HeaderKey       : {
         $Type: 'UI.FieldGroupType',
         Data : [
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: ID
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: ID
+                Value: orderID,
+                Label: '{i18n>OrderID}'
             },
             {
                 $Type: 'UI.DataField',
-                Value: orderID
-            }
+                Value: email,
+                Label: '{i18n>Email}'
+            },
         ]
     },
     // UI.FieldGroup #HeaderImg : {
@@ -217,11 +223,11 @@ annotate service.Orders with @(
     UI.FieldGroup #HeaderA         : {
         $Type: 'UI.FieldGroupType',
         Data : [
-            {
-                $Type: 'UI.DataField',
-                Value: email,
-                Label: '{i18n>Email}'
-            },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: email,
+            //     Label: '{i18n>Email}'
+            // },
             {
                 $Type: 'UI.DataField',
                 Value: firstName,
@@ -231,17 +237,22 @@ annotate service.Orders with @(
                 $Type: 'UI.DataField',
                 Value: lastName,
                 Label: '{i18n>LastName}'
-            }
-        ]
-    },
-    UI.FieldGroup #HeaderB         : {
-        $Type: 'UI.FieldGroupType',
-        Data : [
+            },
             {
                 $Type: 'UI.DataField',
                 Value: country_code, //country_ID,
                 Label: '{i18n>Country}'
             },
+        ]
+    },
+    UI.FieldGroup #HeaderB         : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: country_code, //country_ID,
+            //     Label: '{i18n>Country}'
+            // },
             {
                 $Type: 'UI.DataField',
                 Value: createdOn,
@@ -251,12 +262,7 @@ annotate service.Orders with @(
                 $Type: 'UI.DataField',
                 Value: deliveryDate,
                 Label: '{i18n>DeliveryDate}'
-            }
-        ]
-    },
-    UI.FieldGroup #HeaderC         : {
-        $Type: 'UI.FieldGroupType',
-        Data : [
+            },
             {
                 $Type                  : 'UI.DataField',
                 Value                  : status_code,
@@ -264,32 +270,51 @@ annotate service.Orders with @(
                     { $Lt: [ {$Path: 'orderID'}, 1 ], },
                     1,
                     3
-                ]
-                // $If: [ {
-                //         $Or: [
-                //             {
-                //                 $Lt: [ { $Path: 'orderID' }, 1 ]
-                //             },
-                //             // {
-                //             //     $In: [ { $Path: 'status_code' }, 'delivered', 'cancelled' ]
-                //             // }
-                //              {
-                //                  $Eq: [ { $Path: 'status_code' }, 'delivered' ]
-                //              },
-                //              {
-                //                  $Eq: [ { $Path: 'status_code' }, 'cancelled' ]
-                //              }
-                //         ]
-                //     },
-                //     1,
-                //     3
-                // ]
-                }}
+                ] } }
             },
+        ]
+    },
+    UI.FieldGroup #HeaderC         : {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            // {
+            //     $Type                  : 'UI.DataField',
+            //     Value                  : status_code,
+            //     ![@Common.FieldControl]: { $edmJson: { $If: [
+            //         { $Lt: [ {$Path: 'orderID'}, 1 ], },
+            //         1,
+            //         3
+            //     ]
+            //     // $If: [ {
+            //     //         $Or: [
+            //     //             {
+            //     //                 $Lt: [ { $Path: 'orderID' }, 1 ]
+            //     //             },
+            //     //             // {
+            //     //             //     $In: [ { $Path: 'status_code' }, 'delivered', 'cancelled' ]
+            //     //             // }
+            //     //              {
+            //     //                  $Eq: [ { $Path: 'status_code' }, 'delivered' ]
+            //     //              },
+            //     //              {
+            //     //                  $Eq: [ { $Path: 'status_code' }, 'cancelled' ]
+            //     //              }
+            //     //         ]
+            //     //     },
+            //     //     1,
+            //     //     3
+            //     // ]
+            //     }}
+            // },
             {
                 $Type: 'UI.DataField',
                 Value: totalPrice,
                 Label: '{i18n>TotalPrice}'
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: priceWithVat,
+                Label: '{i18n>PriceWithVAT}'
             },
             {
                 $Type: 'UI.DataField',
@@ -298,14 +323,14 @@ annotate service.Orders with @(
             }
         ]
     },
-    UI.FieldGroup #HeaderD         : {
-        $Type: 'UI.FieldGroupType',
-        Data : [{
-            $Type: 'UI.DataField',
-            Value: priceWithVat,
-            Label: '{i18n>PriceWithVAT}'
-        }]
-    },
+    // UI.FieldGroup #HeaderD         : {
+    //     $Type: 'UI.FieldGroupType',
+    //     Data : [{
+    //         $Type: 'UI.DataField',
+    //         Value: priceWithVat,
+    //         Label: '{i18n>PriceWithVAT}'
+    //     }]
+    // },
     UI.HeaderFacets                : [
         // {
         //     $Type : 'UI.ReferenceFacet',
@@ -332,11 +357,11 @@ annotate service.Orders with @(
             Target: '@UI.FieldGroup#HeaderC',
             ID    : 'HeaderC'
         },
-        {
-            $Type : 'UI.ReferenceFacet',
-            Target: '@UI.FieldGroup#HeaderD',
-            ID    : 'HeaderD'
-        },
+        // {
+        //     $Type : 'UI.ReferenceFacet',
+        //     Target: '@UI.FieldGroup#HeaderD',
+        //     ID    : 'HeaderD'
+        // },
     ],
     UI.Facets                      : [{
         $Type : 'UI.ReferenceFacet',
